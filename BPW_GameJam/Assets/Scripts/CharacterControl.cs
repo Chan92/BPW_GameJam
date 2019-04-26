@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterControl : MonoBehaviour{
 	public float moveSpeed = 10;
+	public Animator anim;
 
 	private GameObject newDoor;
 	private GameObject jumpblock;
@@ -20,13 +21,24 @@ public class CharacterControl : MonoBehaviour{
 			Jump();
 		}
 
-		if(Input.GetButton("LeftHand")) {
+		if(Input.GetButtonDown("LeftHand")) {
 			LeftHand();
 		}
 
-		if(Input.GetButton("RightHand")) {
+		if(Input.GetButtonDown("RightHand")) {
 			RightHand();
 		}
+
+		if(Input.GetButtonUp("LeftHand")) {
+			anim.SetBool("L", false);
+		}
+		if(Input.GetButtonUp("RightHand")) {
+			anim.SetBool("R", false);
+		}
+		if(Input.GetButtonUp("Jump")) {
+			anim.SetBool("jump", false);
+		}
+
 	}
 
 	//playermove
@@ -37,32 +49,31 @@ public class CharacterControl : MonoBehaviour{
 
 	//jump
 	void Jump() {
+		anim.SetBool("jump", true);
 		if(jumpblock != null) {
 			Destroy(jumpblock);
 		}
 	}
 
 	//sticks out left hand
-	void LeftHand() {	
+	void LeftHand() {
+		anim.SetBool("L", true);
 		if(newDoor != null) {
 			Destroy(newDoor);
-			print("test4");
 		}
 	}
 
 	//sticks out right hand
 	void RightHand() {
+		anim.SetBool("R", true);
 		if(newDoor != null) {
 			Destroy(newDoor);
-			print("test3");
 		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
-		print("test1");
 		if (collision.tag == "Doorkey") {
 			newDoor = collision.transform.GetChild(0).gameObject;
-			print(newDoor.name);
 		}
 
 		if(collision.tag == "Jump") {
