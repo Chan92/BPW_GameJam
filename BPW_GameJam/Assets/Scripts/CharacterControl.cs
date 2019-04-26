@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterControl : MonoBehaviour{
+	public float moveSpeed = 10;
 
-    void Update(){
-        if(Input.GetButtonDown("Jump")) {
-			Jump();
+	private GameObject newDoor;
+	private GameObject jumpblock;
+	private bool gameover = false;
+
+	void Update(){
+		//always move
+		if(!gameover) {
+			Movement();
 		}
 
-		if(Input.GetButtonDown("Slide")) {
-			Slide();
+		//do actions upon pressing keys
+		if(Input.GetButtonDown("Jump")) {
+			Jump();
 		}
 
 		if(Input.GetButton("LeftHand")) {
@@ -22,19 +29,48 @@ public class CharacterControl : MonoBehaviour{
 		}
 	}
 
-	//jump
-	void Jump() {
+	//playermove
+	void Movement() {
+		Vector3 newpos = new Vector3(transform.position.x, transform.position.y + moveSpeed * Time.deltaTime, transform.position.z);
+		transform.position = newpos;
 	}
 
-	//slide
-	void Slide() {
+	//jump
+	void Jump() {
+		if(jumpblock != null) {
+			Destroy(jumpblock);
+		}
 	}
 
 	//sticks out left hand
-	void LeftHand() {
+	void LeftHand() {	
+		if(newDoor != null) {
+			Destroy(newDoor);
+			print("test4");
+		}
 	}
 
 	//sticks out right hand
 	void RightHand() {
+		if(newDoor != null) {
+			Destroy(newDoor);
+			print("test3");
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision) {
+		print("test1");
+		if (collision.tag == "Doorkey") {
+			newDoor = collision.transform.GetChild(0).gameObject;
+			print(newDoor.name);
+		}
+
+		if(collision.tag == "Jump") {
+			jumpblock = collision.transform.GetChild(0).gameObject;
+		}
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision) {
+		gameover = true;
 	}
 }
