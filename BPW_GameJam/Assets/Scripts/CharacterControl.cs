@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class CharacterControl : MonoBehaviour{
@@ -78,6 +79,10 @@ public class CharacterControl : MonoBehaviour{
 
 		if(collision.tag == "Jump") {
 			jumpblock = collision.transform.GetChild(0).gameObject;
+		}
+
+		if(collision.name == "Ending") {
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
 		}
 	}
 
